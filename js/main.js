@@ -84,7 +84,7 @@ function initMap() {
   infowindow = new google.maps.InfoWindow({
     maxWidth: 200
   });
-  var locationLength = location.length;
+  var locationLength = locations.length;
   for (var i = 0; i < locationLength; i++) {
       apiCall(i);
   }
@@ -98,7 +98,7 @@ function initMap() {
     self.locations().forEach(function(place) {
       google.maps.event.addListener(place.marker, 'click', (function(marker, map, infowindow) {
         return function() {
-          var contentString = '<h2>' + place.title + '</h2>' + '<h3>Rating:</h3>' + '<img src=' + place.rating + '>' + '<h3>Reviews:</h3>' + '<div>' + place.review + '<br>' + '<br>' + 'Information provided by Yelp' + '</div>';
+          var contentString = '<h2>' + place.name + '</h2>' + '<h3>Rating:</h3>' + '<img src=' + place.rating + '>' + '<h3>Reviews:</h3>' + '<div>' + place.review + '<br>' + '<br>' + 'Information provided by Yelp' + '</div>';
           infowindow.setContent(contentString);
           infowindow.open(map, place.marker);
         };
