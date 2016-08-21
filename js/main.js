@@ -43,6 +43,7 @@ var locations = [{
     yelp_website: "https://api.yelp.com/v2/business/calvary-cemetery-woodside"
   }
 ];
+// Borrowed lines 47-78 from https://github.com/JimRhead/Udacity-Maps-Api/blob/master/app.js
 var apiCall = function(i) {
     function nonce_generate() {
         return (Math.floor(Math.random() * 1e12).toString());
@@ -95,10 +96,11 @@ function initMap() {
     for (var i = 0; i < locations.length; i++) {
       locations[i].marker = createMarker(new google.maps.LatLng(locations[i].lat, locations[i].lng));
     }
+    // Borrowed lines 100-108 from https://github.com/JimRhead/Udacity-Maps-Api/blob/master/app.js
     self.locations().forEach(function(place) {
       google.maps.event.addListener(place.marker, 'click', (function(marker, map, infowindow) {
         return function() {
-          var contentString = '<h2>' + place.name + '</h2>' + '<h3>Rating:</h3>' + '<img src=' + place.rating + '>' + '<h3>Reviews:</h3>' + '<div>' + place.review + '<br>' + '<br>' + 'Information provided by Yelp' + '</div>';
+          var contentString = '<h2>' + place.name + '</h2>' + '<h3>Rating:</h3>' + '<img src=' + place.rating + '>' + '<h3>Reviews:</h3>' + '<div>' + place.review + '</div>';
           infowindow.setContent(contentString);
           infowindow.open(map, place.marker);
         };
