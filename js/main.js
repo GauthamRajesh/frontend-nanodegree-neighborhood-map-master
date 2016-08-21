@@ -1,3 +1,4 @@
+// Looked at https://discussions.udacity.com/t/how-to-make-ajax-request-to-yelp-api/13699/5 and https://github.com/JimRhead/Udacity-Maps-Api/blob/master/app.js for inspiration
 var map;
 var marker;
 function createMarker(latlng) {
@@ -43,39 +44,40 @@ var locations = [{
     yelp_website: "https://api.yelp.com/v2/business/calvary-cemetery-woodside"
   }
 ];
-// Borrowed lines 47-78 from https://github.com/JimRhead/Udacity-Maps-Api/blob/master/app.js
-var apiCall = function(i) {
-    function nonce_generate() {
-        return (Math.floor(Math.random() * 1e12).toString());
-    }
-    var yelp_url = locations[i].yelp_website;
-    var parameters = {
-        oauth_consumer_key: 'Ym8uo_wnWdzgxbD30Ht3Gw',
-        oauth_token: 'Buej2WYz709jlUxKhGz91gfnhDGOjLBg',
-        oauth_nonce: nonce_generate(),
-        oauth_timestamp: Math.floor(Date.now() / 1000),
-        oauth_signature_method: 'HMAC-SHA1',
-        oauth_version: '1.0',
-        callback: 'cb'
-    };
-    var encodedSignature = oauthSignature.generate('GET', yelp_url, parameters, 'mGGqwLqFKB5MGGEASJ3rnvT7Qx0', 'rX2fF33xyhSNQhJd7B8y3xKCAyQ');
-    parameters.oauth_signature = encodedSignature;
-    var settings = {
-        url: yelp_url,
-        data: parameters,
-        cache: true,
-        dataType: 'jsonp',
-        success: function(results) {
-            locations[i].result = results;
-            locations[i].rating = results.rating_img_url;
-            locations[i].review = results.snippet_text;
-        },
-        error: function() {
-          window.alert("The API call to Yelp failed. Please try again.");
-        }
-    };
-    $.ajax(settings);
+function nonce_generate() {
+    return (Math.floor(Math.random() * 1e12).toString());
+}
+var i;
+var yelp_url = locations[i].yelp_website;
+var parameters = {
+    oauth_consumer_key: 'Ym8uo_wnWdzgxbD30Ht3Gw',
+    oauth_token: 'Buej2WYz709jlUxKhGz91gfnhDGOjLBg',
+    oauth_nonce: nonce_generate(),
+    oauth_timestamp: Math.floor(Date.now() / 1000),
+    oauth_signature_method: 'HMAC-SHA1',
+    oauth_version: '1.0',
+    callback: 'cb'
 };
+var encodedSignature = oauthSignature.generate('GET', yelp_url, parameters, '	mGGqwLqFKB5MGGEASJ3rnvT7Qx0', 'rX2fF33xyhSNQhJd7B8y3xKCAyQ');
+parameters.oauth_signature = encodedSignature;
+var settings = {
+    url: yelp_url,
+    data: parameters,
+    cache: true,
+    dataType: 'jsonp',
+    success: function(results) {
+      locations[i].results = result;
+      locations[i].url = result.url;
+      locations[i].rating_img_large_url = result.rating_img_large_url;
+      locations[i].snippet_text = result.snippet_text;
+    },
+    fail: function() {
+      alert("The Yelp API call has failed. Please try again.");
+    }
+};
+for(i = 0; i < locations.length; i++) {
+    $.ajax(settings);
+}
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: 40.730610, lng: -73.935242},
@@ -83,12 +85,9 @@ function initMap() {
   });
   var infowindow;
   infowindow = new google.maps.InfoWindow({
-    maxWidth: 200
+    maxWidth: 300,
+    content: null
   });
-  var locationLength = locations.length;
-  for (var i = 0; i < locationLength; i++) {
-      apiCall(i);
-  }
   var viewModel = function() {
     var self = this;
     self.locations = ko.observableArray(locations);
@@ -96,15 +95,12 @@ function initMap() {
     for (var i = 0; i < locations.length; i++) {
       locations[i].marker = createMarker(new google.maps.LatLng(locations[i].lat, locations[i].lng));
     }
-    // Borrowed lines 100-108 from https://github.com/JimRhead/Udacity-Maps-Api/blob/master/app.js
-    self.locations().forEach(function(place) {
-      google.maps.event.addListener(place.marker, 'click', (function(marker, map, infowindow) {
-        return function() {
-          var contentString = '<h2>' + place.name + '</h2>' + '<h3>Rating:</h3>' + '<img src=' + place.rating + '>' + '<h3>Reviews:</h3>' + '<div>' + place.review + '</div>';
-          infowindow.setContent(contentString);
-          infowindow.open(map, place.marker);
-        };
-      })(place.marker, map, infowindow));
+    self.locations().forEach(function(location) {
+      google.maps.event.addListener(marker, 'click', function(marker, map, infowindow) {
+        var contentString = "<h1>" + location.title + "</h1>" + "<br>" + "<h3>Rating:</h3>" + "<img src=" + result.rating_img_large_url + ">" + "<h4>Review:</h4>" + "<p>" + result.snippet_text + "</p>" + "<a href=" + result.url + ">Go to Yelp Website for Place" + "</a>";
+        infowindow.setContent(contentString);
+        infowindow.open(map, marker);
+      }(marker, map, infowindow));
     });
     self.search = ko.computed(function() {
       return ko.utils.arrayFilter(self.locations(), function(place) {
