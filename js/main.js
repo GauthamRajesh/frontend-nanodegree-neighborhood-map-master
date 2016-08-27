@@ -44,6 +44,7 @@ var locations = [{
     yelp_website: "https://api.yelp.com/v2/business/calvary-cemetery-woodside"
   }
 ];
+/* Need help with this!
 function nonce_generate() {
     return (Math.floor(Math.random() * 1e12).toString());
 }
@@ -78,6 +79,7 @@ var settings = {
 for(i = 0; i < locations.length; i++) {
     $.ajax(settings);
 }
+*/
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: 40.730610, lng: -73.935242},
@@ -95,6 +97,7 @@ function initMap() {
     for (var i = 0; i < locations.length; i++) {
       locations[i].marker = createMarker(new google.maps.LatLng(locations[i].lat, locations[i].lng));
     }
+    /* And this!
     self.locations().forEach(function(location) {
       google.maps.event.addListener(marker, 'click', function(marker, map, infowindow) {
         var contentString = "<h1>" + location.title + "</h1>" + "<br>" + "<h3>Rating:</h3>" + "<img src=" + result.rating_img_large_url + ">" + "<h4>Review:</h4>" + "<p>" + result.snippet_text + "</p>" + "<a href=" + result.url + ">Go to Yelp Website for Place" + "</a>";
@@ -102,6 +105,7 @@ function initMap() {
         infowindow.open(map, marker);
       }(marker, map, infowindow));
     });
+    */
     self.search = ko.computed(function() {
       return ko.utils.arrayFilter(self.locations(), function(place) {
         var match = place.name.toLowerCase().indexOf(self.value().toLowerCase()) >= 0;
