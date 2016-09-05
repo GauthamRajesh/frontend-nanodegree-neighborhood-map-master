@@ -51,7 +51,6 @@ var locations = [{
 function nonce_generate() {
     return (Math.floor(Math.random() * 1e12).toString());
 }
-/*
 var yelp_api = function(i) {
   var yelp_url = locations[i].yelp_website;
   var parameters = {
@@ -71,8 +70,9 @@ var yelp_api = function(i) {
       cache: true,
       dataType: 'jsonp',
       success: function(results) {
+        console.log(results);
         locations[i].url = results.url;
-        locations[i].rating_img_large_url = results.rating_img_large_url;
+        locations[i].rating_img_url_large = results.rating_img_large_url;
         locations[i].snippet_text = results.snippet_text;
       },
       error: function() {
@@ -83,7 +83,7 @@ var yelp_api = function(i) {
 }
 for(var i = 0; i < locations.length; i++) {
     yelp_api(i);
-} */
+}
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: 40.730610, lng: -73.935242},
@@ -101,17 +101,15 @@ function initMap() {
     for (var i = 0; i < locations.length; i++) {
       locations[i].marker = createMarker(new google.maps.LatLng(locations[i].lat, locations[i].lng));
     }
-    /*
     self.locations().forEach(function(location) {
       google.maps.event.addListener(marker, 'click', function(marker, map, infowindow) {
-        var contentString = "<h1>" + location.title + "</h1>" + "<br>" + "<h3>Rating:</h3>" + "<img src=" + location.rating_img_large_url + ">" + "<h4>Review:</h4>" + "<p>" + location.snippet_text + "</p>" + "<a href=" + location.url + ">Go to Yelp Website for Place" + "</a>";
+        var contentString = "<h1>" + location.title + "</h1>" + "<br>" + "<h3>Rating:</h3>" + "<img src=" + location.rating_img_url_large + ">" + "<h4>Review:</h4>" + "<p>" + location.snippet_text + "</p>" + "<a href=" + location.url + ">Go to Yelp Website for Place" + "</a>";
         infowindow.setContent(contentString);
         infowindow.open(map, marker);
         marker.setAnimation(google.maps.Animation.BOUNCE);
         marker.stopAnimation(marker);
       }(marker, map, infowindow));
     });
-    */
     self.search = ko.computed(function() {
       return ko.utils.arrayFilter(self.locations(), function(place) {
         var match = place.name.toLowerCase().indexOf(self.value().toLowerCase()) >= 0;
