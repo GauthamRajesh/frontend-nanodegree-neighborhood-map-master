@@ -102,13 +102,16 @@ function initMap() {
       locations[i].marker = createMarker(new google.maps.LatLng(locations[i].lat, locations[i].lng));
     }
     self.locations().forEach(function(location) {
-      google.maps.event.addListener(marker, 'click', function(marker, map, infowindow) {
+      var marker = location.marker;
+      google.maps.event.addListener(marker, 'click', function() {
         var contentString = "<h1>" + location.title + "</h1>" + "<br>" + "<h3>Rating:</h3>" + "<img src=" + location.rating_img_url_large + ">" + "<h4>Review:</h4>" + "<p>" + location.snippet_text + "</p>" + "<a href=" + location.url + ">Go to Yelp Website for Place" + "</a>";
         infowindow.setContent(contentString);
         infowindow.open(map, marker);
         marker.setAnimation(google.maps.Animation.BOUNCE);
-        marker.stopAnimation(marker);
-      }(marker, map, infowindow));
+        setTimeout(function(){
+          marker.setAnimation(null);
+        }, 1400);
+      });
     });
     self.search = ko.computed(function() {
       return ko.utils.arrayFilter(self.locations(), function(place) {
