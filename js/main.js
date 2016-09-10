@@ -72,7 +72,7 @@ var yelp_api = function(i) {
       success: function(results) {
         console.log(results);
         locations[i].url = results.url;
-        locations[i].rating_img_url_large = results.rating_img_large_url;
+        locations[i].rating_img_url_large = results.rating_img_url_large;
         locations[i].snippet_text = results.snippet_text;
       },
       error: function() {
@@ -104,7 +104,7 @@ function initMap() {
     self.locations().forEach(function(location) {
       var marker = location.marker;
       google.maps.event.addListener(marker, 'click', function() {
-        var contentString = "<h1>" + location.title + "</h1>" + "<br>" + "<h3>Rating:</h3>" + "<img src=" + location.rating_img_url_large + ">" + "<h4>Review:</h4>" + "<p>" + location.snippet_text + "</p>" + "<a href=" + location.url + ">Go to Yelp Website for Place" + "</a>";
+        var contentString = "<h1>" + location.name + "</h1>" + "<br>" + "<h3>Rating:</h3>" + "<img src=" + location.rating_img_url_large + ">" + "<h4>Review:</h4>" + "<p>" + location.snippet_text + "</p>" + "<a href=" + location.url + ">Go to Yelp Website for Place" + "</a>";
         infowindow.setContent(contentString);
         infowindow.open(map, marker);
         marker.setAnimation(google.maps.Animation.BOUNCE);
