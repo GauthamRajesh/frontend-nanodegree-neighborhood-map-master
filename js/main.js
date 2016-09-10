@@ -113,6 +113,9 @@ function initMap() {
         }, 1400);
       });
     });
+    self.openInfowindow = function(location) {
+      google.maps.event.trigger(location.marker, 'click');
+    }
     self.search = ko.computed(function() {
       return ko.utils.arrayFilter(self.locations(), function(place) {
         var match = place.name.toLowerCase().indexOf(self.value().toLowerCase()) >= 0;
@@ -123,3 +126,4 @@ function initMap() {
   };
   ko.applyBindings(new viewModel());
 }
+
